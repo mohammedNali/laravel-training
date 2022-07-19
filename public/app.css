@@ -1,0 +1,22 @@
+body {
+    background-color: wheat;
+    color: black;
+    max-width: 600px;
+    margin: auto;
+    font-family: sans-serif;
+}
+
+p {
+    line-height: 1.6;
+}
+
+article + article {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #a5a;
+}
+
+h1 a {
+    color: #a5a;
+    text-decoration: none;
+}
