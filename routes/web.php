@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Post;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +17,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('posts');
-});
-
-Route::get('/posts/{slug}', function ($slug) {
-    return view('post', [
-        'file_content' => file_get_contents(__DIR__ . "/../resources/posts/{$slug}.html")
+    return view('posts', [
+        'posts' => Post::all(),
     ]);
 });
+
+
+
+// Route Wildcard Constraints
+Route::get('/posts/{slug}', function ($slug) {
+    $post_content = Post::find($slug);
+
+    return view('post', [
+        'post_content' => $post_content
+    ]);
+})->where('slug', '[A-z_\-]+');
 
