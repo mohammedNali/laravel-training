@@ -48,65 +48,25 @@ class Post
                         $document->body()
                     );
                 })
-//            ->sortBy('date');
-                ->sortByDesc('date');
+            ->sortBy('date');
+//                ->sortByDesc('date');
         });
-
-
-//    return array_map(function ($file) {
-//        $document = YamlFrontMatter::parseFile($file);
-//        return new Post(
-//            $document->title,
-//            $document->slug,
-//            $document->excerpt,
-//            $document->date,
-//            $document->img,
-//            $document->body()
-//        );
-//    },$files);
-
-//    $posts = [];
-//    foreach ($files as $file) {
-//        $document = YamlFrontMatter::parseFile($file);
-//        $posts[] = new Post(
-//            $document->title,
-//            $document->slug,
-//            $document->excerpt,
-//            $document->date,
-//            $document->image,
-//            $document->body()
-//        );
-//    }
-//    return $posts;
-//        $files = File::files(resource_path("posts/"));
-//
-//        // We should use collection here collect()
-//        return array_map(function ($file) {
-//            return $file->getContents();
-//        }, $files);
     }
 
 
     public static function find($slug) {
 
+        return static::all()->firstWhere('slug', $slug);
 
-        $posts = static::all();
+    }
 
-        return $posts->firstWhere('slug', $slug);
+    public static function findOrFail($slug) {
 
-////        if (! file_exists($path = __DIR__ . "/../../resources/posts/{$slug}.html")) {
-//        if (! file_exists($path = resource_path("posts/{$slug}.html"))) {
-////        abort(404);
-////            return redirect('/');
-////            throw new \Exception();
-//            throw new ModelNotFoundException();
-//        }
-//
-////    $post = cache()->remember("posts.{$slug}", 1200, function () use ($path) {
-////        return file_get_contents($path);
-////    });
-//
-//        return cache()->remember("posts.{$slug}", 5, fn() => file_get_contents($path));
+        $post = static::find($slug);
+        if (! $post) {
+            throw new ModelNotFoundException();
+        }
+        return $post;
 
     }
 

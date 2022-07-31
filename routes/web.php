@@ -26,10 +26,13 @@ Route::get('/', function () {
 
 // Route Wildcard Constraints
 Route::get('/posts/{slug}', function ($slug) {
-    $post_content = Post::find($slug);
+    $post_content = Post::findOrFail($slug);
+
+//    ddd($post_content);
 
     return view('post', [
         'post_content' => $post_content
     ]);
-})->where('slug', '[A-z_\-]+');
+});
+//})->where('slug', '[A-z_\-]+');
 
