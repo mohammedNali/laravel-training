@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\UsersController;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
@@ -16,23 +21,43 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 |
 */
 
-Route::get('/', function () {
-    return view('posts', [
-        'posts' => Post::all(),
-    ]);
-});
+Route::get('/', [PostsController::class, 'index']);
 
+Route::resource('posts', PostsController::class)->only([
+    'create', 'show', 'edit', 'store', 'destroy'
+]);
+
+Route::resource('categories', CategoryController::class);
 
 
 // Route Wildcard Constraints
-Route::get('/posts/{slug}', function ($slug) {
-    $post_content = Post::findOrFail($slug);
+//Route::get('/posts/{post:slug}', [PostsController::class, 'show']);
 
-//    ddd($post_content);
 
-    return view('post', [
-        'post_content' => $post_content
+
+Route::get('categories/{category:slug}', function (Category $category) {
+    return view('posts.index', [
+        'posts' => $category->posts
+//            ->load(['category', 'author'])
     ]);
 });
-//})->where('slug', '[A-z_\-]+');
+
+///author/{{ $post->author->id }}
+Route::get('author/{author:username}', function (User $author) {
+    return view('posts.index', [
+        'posts' => $author->posts
+//            ->load(['category', 'author'])
+    ]);
+});
+
+//programmer.test/users
+//Route::get('users', [UsersController::class, 'index']);
+
+
+
+
+
+
+
+
 
