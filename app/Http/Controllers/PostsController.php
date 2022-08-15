@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -9,13 +10,19 @@ class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
+//        dd(\request(['search']));
+//        dd(\request('search'));
+//        dd(\request());
+//        dd(\request()->only('search'));
         return view('posts.index', [
-            'posts' => Post::latest()->with('category', 'author')->get(),
+//            'posts' => Post::latest()->with('category', 'author')->get(),
+            'posts' => Post::latest()->filter(\request(['search', 'category', 'author']))->get(),
+//            'categories' => Category::all(),
+//            'currentCategory' => Category::where('slug', \request('category'))->first()
+//            'currentCategory' => Category::firstWhere('slug', \request('category'))
         ]);
     }
 
@@ -42,9 +49,9 @@ class PostsController extends Controller
 
 
 
-    public function show($slug)
+    public function show(Post $post)
     {
-        $post = Post::where('slug', $slug)->first();
+//        $post = Post::where('slug', $slug)->first();
         return view('posts.post', [
             'post' => $post
         ]);
@@ -83,4 +90,6 @@ class PostsController extends Controller
     {
         //
     }
+
+
 }

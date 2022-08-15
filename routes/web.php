@@ -21,26 +21,27 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 |
 */
 
-Route::get('/', [PostsController::class, 'index']);
+Route::get('/', [PostsController::class, 'index'])->name('home');
+// Route Wildcard Constraints
+Route::get('posts/{post:slug}', [PostsController::class, 'show']);
 
-Route::resource('posts', PostsController::class)->only([
-    'create', 'show', 'edit', 'store', 'destroy'
-]);
+
+//Route::resource('posts', PostsController::class)->only([
+//    'create', 'show', 'edit', 'store', 'destroy'
+//]);
+
+
 
 Route::resource('categories', CategoryController::class);
 
 
-// Route Wildcard Constraints
-//Route::get('/posts/{post:slug}', [PostsController::class, 'show']);
-
-
-
-Route::get('categories/{category:slug}', function (Category $category) {
-    return view('posts.index', [
-        'posts' => $category->posts
-//            ->load(['category', 'author'])
-    ]);
-});
+//Route::get('categories/{category:name}', function (Category $category) {
+//    return view('posts.index', [
+//        'posts' => $category->posts,
+//        'categories' => Category::all(),
+//        'currentCategory' => $category,
+//    ]);
+//})->name('category');
 
 ///author/{{ $post->author->id }}
 Route::get('author/{author:username}', function (User $author) {
