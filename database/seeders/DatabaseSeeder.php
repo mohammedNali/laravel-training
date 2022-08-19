@@ -31,8 +31,14 @@ class DatabaseSeeder extends Seeder
             'username' => 'mohammed-ali'
         ]);
 
+        $ali = User::factory()->create([
+            'name' => 'Ali ali',
+            'username' => 'ali-ali'
+        ]);
+
         $category = Category::factory()->create();
         $category2 = Category::factory()->create();
+        $category3 = Category::factory()->create();
 
         Post::factory(10)->create([
             'user_id' => $ahmed->id,
@@ -41,6 +47,10 @@ class DatabaseSeeder extends Seeder
         Post::factory(10)->create([
             'user_id' => $mohammed->id,
             'category_id' => $category2->id
+        ]);
+        Post::factory(10)->create([
+            'user_id' => $ali->id,
+            'category_id' => $category3->id
         ]);
 //         \App\Models\User::factory(10)->create();
 //        $user = User::factory()->create();

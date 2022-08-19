@@ -2,6 +2,7 @@
     {{ $attributes->merge(['class' => 'transition-colors duration-300 hover:bg-gray-100 border border-black border-opacity-0 hover:border-opacity-5 rounded-xl']) }}
     >
     <div class="py-6 px-5">
+        {{ $post->id }}
         <div>
             <img src="/images/illustration-1.png" alt="Blog Post illustration" class="rounded-xl">
         </div>
@@ -28,6 +29,17 @@
             <div class="text-sm mt-4 space-y-4">
                     {!! $post->excerpt !!}
             </div>
+
+            @if(count($post->comments) > 1)
+                <div class="text-sm mt-4">
+                    {{  count($post->comments) .' comments' }}
+                </div>
+            @elseif(count($post->comments) == 1)
+                <div class="text-sm mt-4">
+                    {{  count($post->comments) .' comment' }}
+                </div>
+            @endif
+
 
             <footer class="flex justify-between items-center mt-8">
                 <div class="flex items-center text-sm">

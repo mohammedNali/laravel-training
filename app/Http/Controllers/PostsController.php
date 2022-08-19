@@ -17,12 +17,24 @@ class PostsController extends Controller
 //        dd(\request('search'));
 //        dd(\request());
 //        dd(\request()->only('search'));
+//        return view('posts.index', [
+////            'posts' => Post::latest()->with('category', 'author')->get(),
+//            'posts' => Post::latest()->filter(\request(['search', 'category', 'author']))->get(),
+////            'categories' => Category::all(),
+////            'currentCategory' => Category::where('slug', \request('category'))->first()
+////            'currentCategory' => Category::firstWhere('slug', \request('category'))
+//        ]);
+
+//        return Post::latest()->filter(\request(['search', 'category', 'author']))->get();
+
+
+//        return Post::latest()->filter(\request(['search', 'category', 'author']))->paginate();
+
+
         return view('posts.index', [
-//            'posts' => Post::latest()->with('category', 'author')->get(),
-            'posts' => Post::latest()->filter(\request(['search', 'category', 'author']))->get(),
-//            'categories' => Category::all(),
-//            'currentCategory' => Category::where('slug', \request('category'))->first()
-//            'currentCategory' => Category::firstWhere('slug', \request('category'))
+            'posts' => Post::latest()->filter(
+                request(['search', 'category', 'author'])
+            )->paginate(6)->withQueryString(),
         ]);
     }
 

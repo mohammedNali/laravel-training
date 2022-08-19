@@ -10,7 +10,8 @@ class Post extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $with = ['category', 'author'];
+
+    protected $with = ['category', 'author', 'comments'];
 
 //    protected $fillable = ['title', 'excerpt', 'body', 'slug'];
 
@@ -81,6 +82,10 @@ class Post extends Model
 //        }
 //    }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
 
     public function category()
