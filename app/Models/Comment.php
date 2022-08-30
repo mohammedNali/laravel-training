@@ -9,6 +9,8 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function post()   // post_id
     {
         return $this->belongsTo(Post::class);
@@ -18,6 +20,7 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
 
 
 }

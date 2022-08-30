@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostCommentsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
@@ -10,6 +11,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use MailchimpMarketing\ApiClient;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 /*
@@ -26,6 +28,9 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 Route::get('/', [PostsController::class, 'index'])->name('home');
 // Route Wildcard Constraints
 Route::get('posts/{post:slug}', [PostsController::class, 'show']);
+
+Route::post('posts/{post:slug}/comments', [PostCommentsController::class, 'store']);
+
 
 Route::get('register', [RegisterController::class, 'create'])->middleware('guest');
 Route::post('register', [RegisterController::class, 'store'])->middleware('guest');
@@ -66,6 +71,69 @@ Route::get('author/{author:username}', function (User $author) {
 //Route::get('users', [UsersController::class, 'index']);
 
 
+
+Route::get('admin/posts/create', [PostsController::class, 'create'])->middleware('permissions');
+
+Route::post('admin/posts', [PostsController::class, 'store'])->middleware('permissions');
+
+
+
+
+
+
+
+
+
+
+
+Route::get('ping', function () {
+    $mailchimp = new ApiClient();
+
+    $mailchimp->setConfig([
+        'apiKey' => config('services.mailchimp.key'),
+        'server' => 'us11'
+    ]);
+
+//    $response = $mailchimp->ping->get();
+//    $response = $mailchimp->lists->getAllLists();
+//    $response = $mailchimp->lists->getList('d42c7aa757');
+
+//    $response = $mailchimp->lists->addListMember('d42c7aa757', [
+//        'email_address' => 'mustafa@gmail.com',
+//        'status' => 'subscribed',
+//    ]);
+
+
+//    dd($response);
+});
+
+
+
+Route::post('newsletter', function () {
+
+    request()->validate(['email' => 'required|email']);
+
+    $mailchimp = new ApiClient();
+
+    $mailchimp->setConfig([
+        'apiKey' => config('services.mailchimp.key'),
+        'server' => 'us11'
+    ]);
+
+    try {
+        $response = $mailchimp->lists->addListMember('d42c7aa757', [
+            'email_address' => request('email'),
+            'status' => 'subscribed',
+        ]);
+    } catch (Exception $exception) {
+        throw \Illuminate\Validation\ValidationException::withMessages([
+            'email' => 'This email could not be added to our newsletter list.'
+        ]);
+    }
+
+
+    return redirect('/')->with('success', 'You are now signed up for our newsletter');
+});
 
 
 

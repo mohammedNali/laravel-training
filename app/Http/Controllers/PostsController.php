@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostsController extends Controller
 {
@@ -13,6 +17,17 @@ class PostsController extends Controller
      */
     public function index()
     {
+
+//        dd('hi I am here in index action');
+
+        //        dd(Gate::allows('admin'));
+//        dd(auth()->user()->can('admin'));
+//        dd(\request()->user()->can('author')); // true / false
+//        dd(\request()->user()->cannot('admin'));
+
+//        $this->authorize('admin');
+
+
 //        dd(\request(['search']));
 //        dd(\request('search'));
 //        dd(\request());
@@ -38,25 +53,54 @@ class PostsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+//        if (auth()->guest()) {
+////            abort(403);
+//            abort(Response::HTTP_FORBIDDEN);
+////            return  redirect('/');
+//        }
+
+//        if (auth()->user()?->username !== 'mohammedAli') {
+//            abort(Response::HTTP_FORBIDDEN);
+//        }
+
+        return view('posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(StorePostRequest $request)
     {
-        //
+//        $path = request()->file('thumbnail')->store('thumbnails');
+//        return 'Done: '.$path;
+
+//        ddd(request()->file('thumbnail'));
+//        ddd(\request()->all());
+//        $attributes = \request()->validate([
+//            'title' => 'required',
+//            'thumbnail' => 'required|image',
+//            'slug' => ['required', Rule::unique('posts', 'slug')],
+//            'excerpt' => 'required',
+//            'body' => 'required',
+//            'category_id' => ['required', Rule::exists('categories', 'id')]
+//        ]);
+
+        $attributes = $request->all();
+
+        $attributes['user_id'] = auth()->id();
+        $attributes['thumbnail'] = request()->file('thumbnail')->store('public');
+
+        Post::create($attributes);
+
+        return redirect('/');
+
+
+        //        Post::create([
+//            'title' => $attributes['title']
+//        ]);
+
+
     }
 
 

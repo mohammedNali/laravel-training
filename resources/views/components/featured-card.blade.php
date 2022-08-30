@@ -2,7 +2,11 @@
     class="transition-colors duration-300 hover:bg-gray-100 border border-black border-opacity-0 hover:border-opacity-5 rounded-xl">
     <div class="py-6 px-5 lg:flex">
         <div class="flex-1 lg:mr-8">
-            <img src="/images/illustration-1.png" alt="Blog Post illustration" class="rounded-xl">
+{{--            <img src="{{ asset('storage/'. $post->thumbnail) }}" alt="Blog Post illustration" class="rounded-xl">--}}
+            <img src="{{ asset('storage/') . $post->thumbnail }}" alt="Blog Post illustration" class="rounded-xl">
+{{--            <img src="{{ asset('images/cats.jpg') }}" alt="Blog Post illustration" class="rounded-xl">--}}
+{{--            <img src="{{ storage_path('aJHEn2uIG1kLv2rlNPWDRNU9DNm8iV3mA1dBDdZ6.png') }}" alt="Blog Post illustration" class="rounded-xl">--}}
+
         </div>
 
         <div class="flex-1 flex flex-col justify-between">
@@ -27,6 +31,16 @@
             <div class="text-sm mt-2 space-y-4">
                     {!! $post->excerpt !!}
             </div>
+
+            @if(count($post->comments) > 1)
+                <div class="text-sm mt-4">
+                    {{  count($post->comments) .' comments' }}
+                </div>
+            @elseif(count($post->comments) == 1)
+                <div class="text-sm mt-4">
+                    {{  count($post->comments) .' comment' }}
+                </div>
+            @endif
 
             <footer class="flex justify-between items-center mt-8">
                 <div class="flex items-center text-sm">
